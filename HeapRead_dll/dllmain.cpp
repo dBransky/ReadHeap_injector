@@ -25,8 +25,6 @@ LPVOID IAT_malloc;
 LPVOID IAT_exit;
 FUNC_PTR JumpTo_malloc;
 FUNC_PTR JumpTo_exit;
-int tbl_size=35;
-char* tbl_adr;
 void* addr;
 // Helper function to remove the hook (for the current call):
 void _stdcall remove_malloc_hook() {
@@ -60,19 +58,16 @@ void* _cdecl mallocHook(int size) {
 	
 	addr = original_malloc(size);
 	log_file << std::hex << "0x" << addr << " " << "0x" << size << std::endl;
-	if (size == 35)
-		tbl_adr = (char*)addr;
-	
 	// Assembly part. Might call restore_hook somewhere inside
 	return addr;
 		
 }
 void _cdecl exitHook() {
 	
-	for (size_t i = 0; i < tbl_size; i++)
-	{
-		log_file << "value in index " << i << ": " << ((char*)addr)[0] << std::endl;
-	}
+	//for (size_t i = 0; i < tbl_size; i++)
+	//{
+		//log_file << "value in index " << i << ": " << ((char*)addr)[0] << std::endl;
+	//}
 	Sleep(1000000);
 	original_exit();
 }
